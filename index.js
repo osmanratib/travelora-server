@@ -30,17 +30,20 @@ async function run() {
 
   // tveLora 
 
+  app.get('/places', async (req, res) => {
+   const result = await placesCollection.find().toArray()
+   res.send(result)
+  })
+
   app.post('/places', async (req, res) => {
    const user = req.body;
    const result = await placesCollection.insertOne(user);
    res.send(result);
   })
 
-
   await client.db("admin").command({ ping: 1 });
   console.log("Pinged your deployment. You successfully connected to MongoDB!");
  } finally {
-  // await client.close();
  }
 }
 run().catch(console.dir);
