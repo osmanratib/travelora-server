@@ -27,6 +27,7 @@ async function run() {
   //collections 
 
   const placesCollection = client.db('placeDB').collection('places');
+  // const userCollection = client.db('userDB').collection('users');
 
   // tveLora 
 
@@ -47,6 +48,44 @@ async function run() {
    const user = req.body;
    console.log(user);
    const result = await placesCollection.insertOne(user);
+   res.send(result);
+  })
+
+  app.put('/places/:id', async (req, res) => {
+   const id = req.params.id;
+   const filter = { _id: new ObjectId(id) }
+   const option = { upsert: true }
+   const updatePlaces = req.body;
+   const places = {
+    $set: {
+     image: updatePlaces.image,
+     touristSpotName: updatePlaces.touristSpotName,
+     country: updatePlaces.country,
+     location: updatePlaces.location,
+     description: updatePlaces.description,
+     averageCost: updatePlaces.averageCost,
+     seasonality: updatePlaces.seasonality,
+     travelTime: updatePlaces.travelTime,
+     totalVisitorsPerYear: updatePlaces.totalVisitorsPerYear
+    }
+   }
+
+   const result = await placesCollection.updateOne(filter, places, option)
+   res.send(result)
+
+  })
+
+  app.delete('/places/:id', async (req, res) => {
+   const id = req.params.id;
+   const query = { _id: new ObjectId(id) };
+   const result = await placesCollection.deleteOne(query);
+   res.send(result);
+  });
+
+  // myPlaces 
+  app.get('/myPLaces', async (req, res) => {
+   const email = req.query.email;
+   const result = await placesCollection.find({ email }).toArray();
    res.send(result);
   })
 
