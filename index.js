@@ -27,7 +27,7 @@ async function run() {
   //collections 
 
   const placesCollection = client.db('placeDB').collection('places');
-  // const userCollection = client.db('userDB').collection('users');
+  const countriesCollection = client.db('CountriesDB').collection('countries');
 
   // tveLora 
 
@@ -89,14 +89,18 @@ async function run() {
    res.send(result);
   })
 
+  // countries 
+  app.get('/countries', async (req, res) => {
+   const result = await countriesCollection.find().toArray();
+   res.send(result);
+  })
+
   await client.db("admin").command({ ping: 1 });
   console.log("Pinged your deployment. You successfully connected to MongoDB!");
  } finally {
  }
 }
 run().catch(console.dir);
-
-
 
 app.get('/', (req, res) => {
  res.send('Travelora server is running')
