@@ -32,9 +32,14 @@ async function run() {
   // tveLora 
 
   app.get('/places', async (req, res) => {
-   const result = await placesCollection.find().toArray()
-   res.send(result)
-  })
+   const countryName = req.query.countryName;
+   let query = {};
+   if (countryName) {
+    query.country = countryName;
+   }
+   const result = await placesCollection.find(query).toArray();
+   res.send(result);
+  });
 
   app.get('/places/:id', async (req, res) => {
    const id = req.params.id;
@@ -42,13 +47,6 @@ async function run() {
    const result = await placesCollection.findOne(query)
    res.send(result);
    console.log(result)
-  })
-
-  app.post('/places', async (req, res) => {
-   const user = req.body;
-   console.log(user);
-   const result = await placesCollection.insertOne(user);
-   res.send(result);
   })
 
   app.put('/places/:id', async (req, res) => {
