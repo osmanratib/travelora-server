@@ -34,9 +34,14 @@ async function run() {
   app.get('/places', async (req, res) => {
    const countryName = req.query.countryName;
    let query = {};
+
    if (countryName) {
-    query.country = countryName;
+    query.country = {
+     $regex: `^${countryName.trim()}$`,
+     $options: "i" 
+    };
    }
+
    const result = await placesCollection.find(query).toArray();
    res.send(result);
   });
